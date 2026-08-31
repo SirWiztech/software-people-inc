@@ -252,10 +252,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
     position: absolute;
     top: 0; right: 0; bottom: 0; left: 0;
     z-index: -1;
-    background-image: linear-gradient(to right, var(--line) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+    background-image: linear-gradient(to right, var(--line-strong) 1.5px, transparent 1.5px),
+      linear-gradient(to bottom, var(--line-strong) 1.5px, transparent 1.5px);
     background-size: 40px 40px;
-    opacity: 0.4;
+    opacity: 0.7;
     mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, #000 40%, transparent 100%);
     -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, #000 40%, transparent 100%);
   }
