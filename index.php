@@ -220,7 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
     display:flex; align-items:center; gap:10px; color:var(--ink);
     text-decoration:none; font-family:var(--font-display); font-weight:600; font-size:15px;
   }
-  .mark-logo{height:26px; width:auto; flex:none; display:block;}
+  .mark-logo{height:38px; width:auto; flex:none; display:block;}
   .navlinks{display:flex; align-items:center; gap:34px; list-style:none; margin:0; padding:0;}
   .navlinks a{
     display:inline-flex; align-items:center; gap:7px;
@@ -540,6 +540,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
   footer a{color:var(--ink-soft); text-decoration:none; margin-left:20px;}
   footer a:hover{color:var(--accent-green-deep);}
   .foot-links a:first-child{margin-left:0;}
+  .foot-brand{display:inline-flex; align-items:center; gap:8px;}
+  .footer-logo{height:20px; width:auto; opacity:0.7;}
 
   /* ---------- SCROLL ANIMATIONS (jQuery) ---------- */
   .anim-fade-up{opacity:0; transform:translateY(40px);}
@@ -861,7 +863,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
 
 <footer>
   <div class="wrap">
-    <span><?= $founded_year ?>–<?= $current_year ?> Software People, Inc. All rights reserved.</span>
+    <span class="foot-brand"><img src="Logo.png" alt="Software People" class="footer-logo"> <?= $founded_year ?>–<?= $current_year ?> Software People, Inc. All rights reserved.</span>
     <span class="foot-links">
       <a href="#">Terms of Use</a>
       <a href="#">Privacy Policy</a>
