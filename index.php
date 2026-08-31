@@ -207,10 +207,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
 
   /* ---------- NAV ---------- */
   header.site-nav{
-    position:fixed; top:0; left:0; right:0; z-index:100;
+    position:fixed; top:0; left:0; width:100%; z-index:100;
     background:rgba(255,255,255,0.86);
     backdrop-filter:blur(10px);
     border-bottom:1px solid var(--line);
+    box-sizing:border-box;
   }
   .nav-inner{
     max-width:var(--maxw); margin:0 auto; padding:0 40px; height:66px;
@@ -243,6 +244,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
     text-decoration:none; transition:background .25s ease, border-color .25s ease;
   }
   .nav-cta:hover{background:var(--accent-green-deep); border-color:var(--accent-green-deep);}
+  .site-nav.nav-scrolled{background:rgba(255,255,255,0.96); box-shadow:0 2px 20px rgba(0,0,0,0.08);}
+  section h2{border-bottom:0 solid var(--accent-green); transition:border-bottom-width .6s ease; display:inline-block; padding-bottom:4px;}
 
   /* ---------- HERO ---------- */
   .hero{padding:158px 0 90px; position:relative; overflow:hidden;}
@@ -569,9 +572,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
     .wrap{padding:0 24px;}
     .nav-inner{padding:0 24px;}
     .navlinks{display:none;}
-    .hero{padding:130px 0 60px;}
-    .hero-grid{grid-template-columns:1fr; gap:50px;}
-    .hero-diagram{max-width:420px; margin:0 auto;}
+    .hero{padding:110px 0 50px; overflow:visible;}
+    .hero .grid-background{display:none;}
+    .hero-grid{grid-template-columns:1fr; gap:40px;}
+    .hero-diagram{max-width:320px; margin:0 auto;}
+    .hero h1{font-size:clamp(28px, 6vw, 40px); text-align:center;}
+    .hero-sub{text-align:center;}
+    .hero-actions{justify-content:center;}
+    .hero-meta{justify-content:center;}
+    .eyebrow-line{justify-content:center;}
     .about-body{grid-template-columns:1fr; gap:34px; padding-left:0;}
     .section-head{padding-left:0;}
     .cap-list, .industry-wrap, .why-grid{padding-left:0;}
@@ -582,13 +591,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
     .cap-row p{font-size:15px; line-height:1.7; max-width:none;}
     .why-grid{grid-template-columns:1fr;}
     .why-col:first-child{border-right:none; border-bottom:1px solid var(--line);}
-    .contract-panel{margin-left:0; grid-template-columns:1fr; text-align:left;}
+    .contract-panel{margin-left:0; grid-template-columns:1fr; text-align:left; padding:28px 24px;}
     .contact .wrap{grid-template-columns:1fr; gap:44px; padding-top:70px; padding-bottom:70px;}
+    .contact h2{text-align:center; max-width:none;}
+    .contact .lead{text-align:center;}
+    .contact .direct-email{text-align:center; display:block;}
+    .contact-form{padding:0 8px;}
     .spine, .spine-node{display:none;}
+    .grid-background{opacity:0.5; background-size:30px 30px;}
   }
   @media (max-width: 560px){
-    .hero-meta{gap:26px;}
-    .hero-actions{gap:16px;}
+    .wrap{padding:0 16px;}
+    .nav-inner{padding:0 16px;}
+    .hero{padding:90px 0 40px;}
+    .hero h1{font-size:26px;}
+    .hero-sub{font-size:15px;}
+    .hero-meta{gap:20px; flex-direction:column; align-items:center;}
+    .hero-meta div{border-left:none; padding-left:0; text-align:center;}
+    .hero-actions{flex-direction:column; align-items:center; gap:16px;}
+    .hero-diagram{max-width:260px;}
+    .contract-panel{padding:24px 20px;}
+    .contact .wrap{padding-top:50px; padding-bottom:50px;}
+    footer .wrap{flex-direction:column; text-align:center; gap:16px;}
   }
 </style>
 </head>
@@ -886,57 +910,112 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
 
   /* ---------- jQuery Scroll Animations ---------- */
   $(function(){
-    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var $w = $(window), $doc = $(document), reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduced){
       $('.anim-fade-up, .anim-fade-down, .anim-fade-left, .anim-fade-right, .anim-scale').css({opacity:1, transform:'none'});
+      $('.num').each(function(){ $(this).text($(this).data('target')); });
       return;
     }
 
-    // Initial state via jQuery
-    $('.anim-fade-up').css({opacity:0, transform:'translateY(40px)'});
-    $('.anim-fade-down').css({opacity:0, transform:'translateY(-40px)'});
-    $('.anim-fade-left').css({opacity:0, transform:'translateX(-60px)'});
-    $('.anim-fade-right').css({opacity:0, transform:'translateX(60px)'});
-    $('.anim-scale').css({opacity:0, transform:'scale(0.9)'});
+    /* — 1. Scroll-triggered section reveals — */
+    var transforms = {
+      'anim-fade-up':    {from:{opacity:0, transform:'translateY(40px)'},  to:{opacity:1, transform:'translateY(0px)'}},
+      'anim-fade-down':  {from:{opacity:0, transform:'translateY(-40px)'}, to:{opacity:1, transform:'translateY(0px)'}},
+      'anim-fade-left':  {from:{opacity:0, transform:'translateX(-60px)'}, to:{opacity:1, transform:'translateX(0px)'}},
+      'anim-fade-right': {from:{opacity:0, transform:'translateX(60px)'},  to:{opacity:1, transform:'translateX(0px)'}},
+      'anim-scale':      {from:{opacity:0, transform:'scale(0.9)'},       to:{opacity:1, transform:'scale(1)'}},
+    };
 
-    // Animate in on scroll using jQuery
-    var animObserver = new IntersectionObserver(function(entries){
-      entries.forEach(function(e){
-        if(e.isIntersecting){
-          var $el = $(e.target);
-          var duration = $el.data('duration') || 800;
-          var delay = $el.data('delay') || 0;
-          setTimeout(function(){
-            $el.animate({opacity:1}, {
-              duration: duration,
-              step: function(now, fx){
-                // Animate transform along with opacity
-                var base = $el.hasClass('anim-fade-up') ? 'translateY(0px)'
-                  : $el.hasClass('anim-fade-down') ? 'translateY(0px)'
-                  : $el.hasClass('anim-fade-left') ? 'translateX(0px)'
-                  : $el.hasClass('anim-fade-right') ? 'translateX(0px)'
-                  : 'scale(1)';
-                $el.css('transform', base);
-              },
-              complete: function(){
-                $el.css({opacity:1, transform:'none'}).addClass('in');
+    // Set initial hidden state
+    $.each(transforms, function(cls, cfg){ $('.'+cls).css(cfg.from); });
+
+    // Observe and animate with jQuery
+    var revealObs = new IntersectionObserver(function(entries){
+      $.each(entries, function(_, entry){
+        if(!entry.isIntersecting) return;
+        var $el = $(entry.target), cfg = null;
+        $.each(transforms, function(cls){ if($el.hasClass(cls)) cfg = transforms[cls]; });
+        if(!cfg) return;
+        var delay = $el.data('delay') || 0, dur = $el.data('duration') || 900;
+        setTimeout(function(){
+          // Animate each CSS property with jQuery easing
+          $el.stop(true).animate(cfg.to, {
+            duration: dur,
+            easing: 'swing',
+            step: function(now, fx){
+              if(fx.prop === 'opacity'){
+                var prog = fx.pos;
+                var from = cfg.from.transform, to = cfg.to.transform;
+                $el.css('transform', from);
               }
-            });
-          }, delay);
-          animObserver.unobserve(e.target);
-        }
+            },
+            complete: function(){ $el.css(cfg.to).addClass('in'); }
+          });
+        }, delay);
+        revealObs.unobserve(entry.target);
       });
-    }, {threshold: 0.15});
-    $('.anim-fade-up, .anim-fade-down, .anim-fade-left, .anim-fade-right, .anim-scale').each(function(){
-      animObserver.observe(this);
+    }, {threshold: 0.12});
+    $('.anim-fade-up, .anim-fade-down, .anim-fade-left, .anim-fade-right, .anim-scale').each(function(){ revealObs.observe(this); });
+
+    /* — 2. Animated counter for hero stats — */
+    var countersAnimated = false;
+    var counterObs = new IntersectionObserver(function(entries){
+      if(countersAnimated) return;
+      $.each(entries, function(_, e){
+        if(e.isIntersecting) countersAnimated = true;
+      });
+      if(!countersAnimated) return;
+      counterObs.disconnect();
+      $('.hero-meta .num').each(function(){
+        var $num = $(this), target = parseInt($num.text(), 10);
+        if(isNaN(target)) return;
+        $num.data('target', target).text('0');
+        $({val:0}).animate({val:target}, {
+          duration: 1800,
+          easing: 'swing',
+          step: function(){ $num.text(Math.floor(this.val)); },
+          complete: function(){ $num.text(target); }
+        });
+      });
+    }, {threshold: 0.5});
+    $('.hero-meta').each(function(){ counterObs.observe(this); });
+
+    /* — 3. Navbar scroll state — */
+    var $nav = $('.site-nav');
+    $w.on('scroll', function(){
+      if($w.scrollTop() > 80){ $nav.addClass('nav-scrolled'); }
+      else { $nav.removeClass('nav-scrolled'); }
     });
 
-    // Smooth parallax on hero elements while scrolling
-    $(window).on('scroll', function(){
-      var st = $(this).scrollTop();
+    /* — 4. Hero parallax — */
+    $w.on('scroll', function(){
+      var st = $w.scrollTop();
       $('.hero-anim-target').each(function(i){
-        var speed = 0.03 * (i + 1);
+        var speed = 0.025 * (i + 1);
         $(this).css('transform', 'translateY(' + (st * speed) + 'px)');
       });
+    });
+
+    /* — 5. Section heading underline animation on scroll — */
+    var underlineObs = new IntersectionObserver(function(entries){
+      $.each(entries, function(_, e){
+        if(e.isIntersecting){
+          $(e.target).find('h2').each(function(){
+            $(this).css({borderBottom:'0px solid var(--accent-green)'}).animate({borderBottomWidth:'3px'}, 600);
+          });
+          underlineObs.unobserve(e.target);
+        }
+      });
+    }, {threshold: 0.5});
+    $('section').each(function(){ underlineObs.observe(this); });
+
+    /* — 6. Smooth scroll for anchor links — */
+    $('a[href^="#"]').on('click', function(e){
+      var target = $(this.getAttribute('href'));
+      if(target.length){
+        e.preventDefault();
+        $('html, body').stop(true).animate({scrollTop: target.offset().top - 70}, 700, 'swing');
+      }
     });
   });
 
