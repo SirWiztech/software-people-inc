@@ -131,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
     --btn-layer-b: var(--accent-green);
   }
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
+  html{scroll-behavior:smooth; overflow-x:hidden; width:100%;}
   body{
     margin:0;
     font-family:var(--font-body);
@@ -141,6 +141,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
       var(--paper);
     -webkit-font-smoothing:antialiased;
     overflow-x: hidden; /* Prevent scroll from loader */
+    width:100%;
+    max-width:100vw;
   }
   
   /* ---------- PRELOADER ---------- */
@@ -173,6 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
     display: flex; flex-direction: row;
     justify-content: center; align-items: center;
     overflow: hidden;
+    max-width: 90vw;
   }
   .loader span {
     padding: 0; margin: 0;
@@ -199,7 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
   p{margin:0;}
   a{color:inherit;}
   img,svg{display:block; max-width:100%;}
-  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 40px;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 40px; width:100%;}
   ::selection{background:var(--accent-green); color:#fff;}
   a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
     outline:2px solid var(--accent-green); outline-offset:3px;
@@ -207,21 +210,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
 
   /* ---------- NAV ---------- */
   header.site-nav{
-    position:fixed; top:0; left:0; width:100%; z-index:100;
+    position:fixed; top:0; left:0; right:0; z-index:100;
     background:rgba(255,255,255,0.86);
     backdrop-filter:blur(10px);
     border-bottom:1px solid var(--line);
-    box-sizing:border-box;
+    width:100%;
+    max-width:100vw;
   }
   .nav-inner{
     max-width:var(--maxw); margin:0 auto; padding:0 40px; height:66px;
     display:flex; align-items:center; justify-content:space-between;
+    width:100%;
   }
   .mark{
     display:flex; align-items:center; gap:10px; color:var(--ink);
     text-decoration:none; font-family:var(--font-display); font-weight:600; font-size:15px;
+    min-width:0; flex-shrink:1;
   }
   .mark-logo{height:38px; width:auto; flex:none; display:block;}
+  .mark-text{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;}
   .navlinks{display:flex; align-items:center; gap:34px; list-style:none; margin:0; padding:0;}
   .navlinks a{
     display:inline-flex; align-items:center; gap:7px;
@@ -242,6 +249,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
     display:inline-flex; align-items:center; gap:8px; background:var(--ink); border:1px solid var(--ink);
     color:#fff; font-family:var(--font-body); font-size:13.5px; padding:9px 18px; border-radius:var(--radius-s);
     text-decoration:none; transition:background .25s ease, border-color .25s ease;
+    flex:none; white-space:nowrap;
   }
   .nav-cta:hover{background:var(--accent-green-deep); border-color:var(--accent-green-deep);}
   .site-nav.nav-scrolled{background:rgba(255,255,255,0.96); box-shadow:0 2px 20px rgba(0,0,0,0.08);}
@@ -305,6 +313,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
     cursor: pointer;
     filter: saturate(0.8) brightness(1.1);
     transition: transform 0.2s ease, filter 0.2s ease;
+    max-width: 100%;
   }
   .btn-wrapper:hover {
     transform: translateY(-2px);
@@ -328,6 +337,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
     mix-blend-mode: color-dodge;
     transition: color 0.3s ease, text-shadow 0.3s ease;
     pointer-events: none; /* Let wrapper handle clicks */
+    white-space: nowrap;
   }
   .gradient-layer {
     position: absolute;
@@ -372,6 +382,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
     mix-blend-mode: multiply;
     transition: transform 0.3s ease;
     animation: opacityPulse 5s ease infinite;
+    white-space: nowrap;
   }
   .light {
     position: absolute;
@@ -402,7 +413,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
 
   .js-anim .hero-anim-target{opacity:0;}
 
-  .hero-diagram{position:relative; aspect-ratio:1/1;}
+  .hero-diagram{position:relative; aspect-ratio:1/1; max-width:100%;}
   .hero-diagram svg{width:100%; height:auto; transition:opacity .8s ease;}
   .three-mount{
     position:absolute; inset:0; opacity:0; pointer-events:none;
@@ -442,7 +453,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
     background:var(--accent-green); z-index:101; transition:width .08s linear;
   }
 
-  section{padding:100px 0;}
+  section{padding:100px 0; overflow-x:hidden;}
   .alt-panel{background:var(--panel); position:relative;}
   .section-head{max-width:640px; margin-bottom:52px; padding-left:56px;}
   .section-head h2{font-size:clamp(26px, 3vw, 35px); line-height:1.15;}
@@ -513,16 +524,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
   .contact .lead{margin-top:16px; font-size:16px; color:var(--ink-soft); max-width:44ch; line-height:1.6;}
   .direct-email{
     margin-top:30px; display:inline-block; font-size:15px; color:var(--ink); text-decoration:none;
-    border-bottom:1px solid var(--line-strong); padding-bottom:2px;
+    border-bottom:1px solid var(--line-strong); padding-bottom:2px; word-break:break-word;
   }
   .direct-email:hover{color:var(--accent-green-deep); border-color:var(--accent-green-deep);}
 
-  .contact-form{display:flex; flex-direction:column; gap:16px;}
+  .contact-form{display:flex; flex-direction:column; gap:16px; max-width:100%;}
   .contact-form label{font-family:var(--font-mono); font-size:12px; color:var(--ink-soft);}
   .contact-form input, .contact-form textarea{
     background:#fff; border:1px solid var(--line-strong); border-radius:var(--radius-s);
     color:var(--ink); font-family:var(--font-body); font-size:15.5px; padding:11px 13px;
     outline:none; transition:border-color .2s ease;
+    width:100%; max-width:100%;
   }
   .contact-form input:focus, .contact-form textarea:focus{border-color:var(--accent-green);}
   .contact-form textarea{resize:vertical; min-height:70px;}
@@ -572,15 +584,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
     .wrap{padding:0 24px;}
     .nav-inner{padding:0 24px;}
     .navlinks{display:none;}
-    .hero{padding:110px 0 50px; overflow:visible;}
-    .hero .grid-background{display:none;}
-    .hero-grid{grid-template-columns:1fr; gap:40px;}
-    .hero-diagram{max-width:320px; margin:0 auto;}
-    .hero h1{font-size:clamp(28px, 6vw, 40px); text-align:center;}
-    .hero-sub{text-align:center;}
-    .hero-actions{justify-content:center;}
-    .hero-meta{justify-content:center;}
-    .eyebrow-line{justify-content:center;}
+    .hero{padding:130px 0 60px;}
+    .hero-grid{grid-template-columns:1fr; gap:50px;}
+    .hero-diagram{max-width:420px; margin:0 auto;}
     .about-body{grid-template-columns:1fr; gap:34px; padding-left:0;}
     .section-head{padding-left:0;}
     .cap-list, .industry-wrap, .why-grid{padding-left:0;}
@@ -591,28 +597,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
     .cap-row p{font-size:15px; line-height:1.7; max-width:none;}
     .why-grid{grid-template-columns:1fr;}
     .why-col:first-child{border-right:none; border-bottom:1px solid var(--line);}
-    .contract-panel{margin-left:0; grid-template-columns:1fr; text-align:left; padding:28px 24px;}
+    .contract-panel{margin-left:0; grid-template-columns:1fr; text-align:left;}
     .contact .wrap{grid-template-columns:1fr; gap:44px; padding-top:70px; padding-bottom:70px;}
-    .contact h2{text-align:center; max-width:none;}
-    .contact .lead{text-align:center;}
-    .contact .direct-email{text-align:center; display:block;}
-    .contact-form{padding:0 8px;}
     .spine, .spine-node{display:none;}
-    .grid-background{opacity:0.5; background-size:30px 30px;}
   }
   @media (max-width: 560px){
-    .wrap{padding:0 16px;}
-    .nav-inner{padding:0 16px;}
-    .hero{padding:90px 0 40px;}
-    .hero h1{font-size:26px;}
-    .hero-sub{font-size:15px;}
-    .hero-meta{gap:20px; flex-direction:column; align-items:center;}
-    .hero-meta div{border-left:none; padding-left:0; text-align:center;}
-    .hero-actions{flex-direction:column; align-items:center; gap:16px;}
-    .hero-diagram{max-width:260px;}
-    .contract-panel{padding:24px 20px;}
-    .contact .wrap{padding-top:50px; padding-bottom:50px;}
-    footer .wrap{flex-direction:column; text-align:center; gap:16px;}
+    .hero-meta{gap:26px;}
+    .hero-actions{gap:16px;}
+    .nav-inner{padding:0 16px; gap:10px;}
+    .mark{font-size:0; gap:0;}
+    .mark-logo{height:32px;}
+    .mark-text{display:none;}
+    .nav-cta{padding:8px 14px; font-size:12.5px;}
+    .contract-panel{padding:28px 24px;}
+    .contact-form input, .contact-form textarea{font-size:16px;} /* prevents iOS auto-zoom on focus */
+  }
+  @media (max-width: 360px){
+    .nav-cta{padding:7px 11px; font-size:12px;}
   }
 </style>
 </head>
@@ -640,7 +641,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf_submit'])) {
   <div class="nav-inner">
     <a href="#top" class="mark">
       <img src="Logo.png" alt="Software People logo" class="mark-logo">
-      Software People
+      <span class="mark-text">Software People</span>
     </a>
     <ul class="navlinks">
       <li><a href="#about"><?= sp_icon('nav-about') ?><span>About</span></a></li>
